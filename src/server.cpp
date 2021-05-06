@@ -1,8 +1,11 @@
 #include "server.h"
 #include <string>
+#include <thread>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
+#include <fmt/format.h>
+#include <fmt/os.h>
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -12,11 +15,16 @@ using helloworld::Greeter;
 using helloworld::HelloReply;
 using helloworld::HelloRequest;
 
+using namespace std::chrono_literals;
+
 // Logic and data behind the server's behavior.
 class GreeterServiceImpl final : public Greeter::Service {
   Status SayHello(ServerContext* context, const HelloRequest* request, HelloReply* reply) override {
-    std::string prefix("Hello ");
-    reply->set_message(prefix + request->name());
+    std::thread::id this_id = std::this_thread::get_id();
+    std::stringstream ss;
+    ss << std::hex << std::this_thread::get_id();
+    std::string replyStr = fmt::format("Hello, {}, this is {}", request->name(), ss.str());
+    reply->set_message(replyStr);
     return Status::OK;
   }
 };
