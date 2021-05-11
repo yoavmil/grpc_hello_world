@@ -1,6 +1,6 @@
 get_target_property(gRPC_CPP_PLUGIN_EXECUTABLE gRPC::grpc_cpp_plugin IMPORTED_LOCATION_RELEASE)
-set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/be/generated")
-set(PROTOS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/protos")
+set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
+set(PROTOS_DIR "${CMAKE_SOURCE_DIR}/protos")
 set(PROTO_FILES "${PROTOS_DIR}/helloworld.proto")
 set(grpc_srcs 
  "${GENERATED_DIR}/helloworld.grpc.pb.cc"
@@ -21,6 +21,6 @@ add_custom_command(
  COMMENT "Running gRPC C++ protocol buffer compiler on ${PROTO_FILES}"
 )
 
-add_executable(main be/main.cpp be/server.cpp ${grpc_files})
+add_executable(main main.cpp server.cpp ${grpc_files})
 include_directories()
 target_link_libraries(main PRIVATE fmt::fmt gRPC::grpc++ gRPC::grpc++_reflection)

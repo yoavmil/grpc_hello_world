@@ -12,4 +12,4 @@ find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
-add_subdirectory(src)
+add_subdirectory(be)
