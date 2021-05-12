@@ -1,0 +1,9 @@
+input[type="file"] {
+  display: none;
+}
+
+.side-buttons {
+  position: fixed;
+  left : 1rem;
+  top: 1rem;
+}

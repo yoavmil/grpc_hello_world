@@ -16,10 +16,10 @@ I will learn
 # Next Steps
 * build an Angular client
 
-  * move content in `src/` to `src/be`
-  * create subfolder `src/fe` and init it with an Angular project
-  * add `ThreeJs`
-  * open mesh from disk
+  * ~~move content in `src/` to `src/be`~~
+  * ~~create subfolder `src/fe` and init it with an Angular project~~
+  * ~~add `ThreeJs`~~
+  * ~~open mesh from disk~~
   * track 3D position of the mouse
 
 * gRPC STL calls

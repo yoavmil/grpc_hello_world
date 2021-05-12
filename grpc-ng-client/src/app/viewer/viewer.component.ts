@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { STLStubLoaderService } from '../services/stlstub-loader.service';
+import { STLReaderService } from './services/stlreader.service';
 
 @Component({
   selector: 'app-viewer',
@@ -22,24 +24,20 @@ export class ViewerComponent implements AfterViewInit {
   scene: THREE.Scene;
   ambientLight: THREE.AmbientLight;
   light: THREE.DirectionalLight;
+  mesh: THREE.Mesh;
 
-  constructor() {}
+  constructor(
+    private stlReader: STLReaderService,
+    private stlStubLoader: STLStubLoaderService
+  ) {}
 
   ngAfterViewInit(): void {
     this.createRenderer();
     this.createScene();
     this.createCamera();
-    this.createStubCube();
-
+    this.stlReader.init(this.scene);
+    this.stlStubLoader.loadStubSTL();
     this.render();
-  }
-
-  createStubCube() {
-    var geometry = new THREE.BoxBufferGeometry(1, 1, 2);
-    var material = new THREE.MeshStandardMaterial({ color: 0x123456 });
-
-    let mesh = new THREE.Mesh(geometry, material);
-    this.scene.add(mesh);
   }
 
   createRenderer() {
@@ -56,8 +54,8 @@ export class ViewerComponent implements AfterViewInit {
   createCamera() {
     let ratio = this.canvas.clientWidth / this.canvas.clientHeight;
     this.camera = new THREE.PerspectiveCamera(45, ratio, 1, 800);
-    this.camera.position.set(-5, 5, 5);
-
+    this.camera.position.set(-100, 100, 100);
+    this.camera.up.set(0, 0, 1);
     this.cameraControls = new OrbitControls(
       this.camera,
       this.renderer.domElement

@@ -1,0 +1,11 @@
+
+<div class="side-buttons">
+  <button mat-button (click)="filePicker.click()">Load STL</button>
+  <input
+    type="file"
+    #filePicker
+    (change)="onStlPicked($event)"
+    accept=".stl,.STL"
+  />
+</div>
+<app-viewer></app-viewer>
