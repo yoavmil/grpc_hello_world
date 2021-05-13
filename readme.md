@@ -20,7 +20,7 @@ I will learn
   * ~~create subfolder `src/fe` and init it with an Angular project~~
   * ~~add `ThreeJs`~~
   * ~~open mesh from disk~~
-  * track 3D position of the mouse
+  * ~~track 3D position of the mouse~~
 
 * gRPC STL calls
 

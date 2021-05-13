@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { STLStubLoaderService } from '../services/stlstub-loader.service';
+import { Mouse3DPositionService } from './services/mouse3dposition.service';
 import { STLReaderService } from './services/stlreader.service';
 
 @Component({
@@ -28,7 +29,8 @@ export class ViewerComponent implements AfterViewInit {
 
   constructor(
     private stlReader: STLReaderService,
-    private stlStubLoader: STLStubLoaderService
+    private stlStubLoader: STLStubLoaderService,
+    private mouse3dPos : Mouse3DPositionService
   ) {}
 
   ngAfterViewInit(): void {
@@ -37,6 +39,7 @@ export class ViewerComponent implements AfterViewInit {
     this.createCamera();
     this.stlReader.init(this.scene);
     this.stlStubLoader.loadStubSTL();
+    this.mouse3dPos.init(this.camera);
     this.render();
   }
 
@@ -49,6 +52,7 @@ export class ViewerComponent implements AfterViewInit {
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.viewerWrapperRef.nativeElement.appendChild(this.renderer.domElement);
     this.renderer.setClearColor(0x543210);
+    this.canvas.onmousemove = event => this.onMouseMove(event);
   }
 
   createCamera() {
@@ -72,8 +76,17 @@ export class ViewerComponent implements AfterViewInit {
     this.scene.add(this.light);
   }
 
+  onMouseMove(event: MouseEvent) {
+    let rect = this.canvas.getBoundingClientRect();
+    let mousePos: THREE.Vector2 = new THREE.Vector2();
+    mousePos.x = (event.offsetX / rect.width) * 2 - 1;
+    mousePos.y = -(event.offsetY / rect.height) * 2 + 1;
+    this.mouse3dPos.mouseMove(mousePos);
+  }
+
   render() {
     this.renderer.render(this.scene, this.camera);
+    this.mouse3dPos.update();
 
     setTimeout(() => {
       requestAnimationFrame(() => this.render());
