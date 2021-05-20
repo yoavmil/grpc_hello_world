@@ -7,7 +7,7 @@
 #include <fmt/format.h>
 #include <fmt/os.h>
 
-#include "uuid.h"
+#include <uuid.h>
 
 using grpc::Server;
 using grpc::ServerBuilder;
