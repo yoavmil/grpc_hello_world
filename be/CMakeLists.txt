@@ -21,6 +21,14 @@ add_custom_command(
  COMMENT "Running gRPC C++ protocol buffer compiler on ${PROTO_FILES}"
 )
 
-add_executable(main main.cpp server.cpp ${grpc_files})
+set(server_srcs 
+    "main.cpp"
+    "server.cpp"    
+)
+set(server_hdrs 
+    "server.h"
+    "uuid.h"
+)
+add_executable(main ${server_srcs} ${server_hdrs} ${grpc_files})
 include_directories()
 target_link_libraries(main PRIVATE fmt::fmt gRPC::grpc++ gRPC::grpc++_reflection)

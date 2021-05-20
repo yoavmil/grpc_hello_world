@@ -1,2 +1,3 @@
 build
 src/be/generated
+grpc-ng-client/src/app/generated

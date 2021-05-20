@@ -7,6 +7,8 @@
 #include <fmt/format.h>
 #include <fmt/os.h>
 
+#include "uuid.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -30,6 +32,8 @@ class GreeterServiceImpl final : public Greeter::Service {
 };
 
 void RunServer() {
+  UuidBank<uint32_t> uuidBank;
+
   std::string server_address("0.0.0.0:50051");
   GreeterServiceImpl service;
 
