@@ -1,5 +1,6 @@
 add_subdirectory(uuid)
 
+# commands for generating the protobuf c++ files
 get_target_property(gRPC_CPP_PLUGIN_EXECUTABLE gRPC::grpc_cpp_plugin IMPORTED_LOCATION_RELEASE)
 set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
 set(PROTOS_DIR "${CMAKE_SOURCE_DIR}/protos")
@@ -22,15 +23,21 @@ add_custom_command(
  MAIN_DEPENDENCY ${PROTO_FILES}
  COMMENT "Running gRPC C++ protocol buffer compiler on ${PROTO_FILES}"
 )
+# till here protobuf
 
+# other packages
+find_package(glm REQUIRED)
+
+# *The project*
 set(server_srcs 
     "main.cpp"
-    "server.cpp"    
+    "MeshServer.cpp"
 )
 set(server_hdrs 
-    "server.h"
+    "MeshServer.h"
 )
 add_executable(main ${server_srcs} ${server_hdrs} ${grpc_files})
-include_directories()
+
 target_link_libraries(main PRIVATE fmt::fmt gRPC::grpc++ gRPC::grpc++_reflection)
 target_link_libraries(main PRIVATE uuid)
+target_link_libraries(main PRIVATE glm::glm)

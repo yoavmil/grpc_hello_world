@@ -8,14 +8,22 @@ service Greeter {
 }
 
 service MeshSlicer {
-  rpc UploadMesh(stream Facet) returns (MeshID) {}
+  rpc UploadMesh(Mesh) returns (MeshID) {}
   rpc ReleaseMesh(MeshID) returns(OkReply) {}
-  rpc GetContour(ContourRequest) returns (stream Vec2) {}
+  rpc GetContour(ContourRequest) returns (Polygons) {}
 }
 
 message Vec2 {
   float x = 1;
   float y = 2;
+}
+
+message Polygon {
+  repeated Vec2 points = 1;
+}
+
+message Polygons {
+  repeated Polygon polygons = 1;
 }
 
 message Vec3 {
@@ -28,6 +36,10 @@ message Facet {
   Vec3 v0 = 1;
   Vec3 v1 = 2;
   Vec3 v2 = 3;
+}
+
+message Mesh {
+  repeated Facet facets = 1;
 }
 
 message ContourRequest {

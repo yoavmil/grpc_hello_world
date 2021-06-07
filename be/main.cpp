@@ -1,9 +1,10 @@
 #include <fmt/format.h>
 #include <future>
 
-#include "server.h"
+#include "MeshServer.h"
 
 int main(int argc, char** argv) {
-    auto serverThread = std::async(RunServer);
+    auto meshServerThread = std::async(startMeshServer);
+    
     return 0;
 }

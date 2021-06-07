@@ -1,4 +1,5 @@
-add_library(uuid INTERFACE )
+# header only library: https://stackoverflow.com/a/60604878/2378218
+add_library(uuid INTERFACE)
 target_include_directories(uuid INTERFACE .)
 
 # tests

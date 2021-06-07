@@ -1,0 +1,21 @@
+{
+  "name": "grpc_hello_world",
+  "version": "1.0.0",
+  "description": "Study case for gRPC",
+  "scripts": {
+    "cmake": "cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=C:/Users/User/source/repos/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    "build": "cmake --build build",
+    "serve": "node scripts/runExec.js ./build/be/Debug/main.exe",
+    "serve:proxy": "node scripts/dockerRun.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoavmil/grpc_hello_world.git"
+  },
+  "author": "Yoav Miller, yoavmil@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoavmil/grpc_hello_world/issues"
+  },
+  "homepage": "https://github.com/yoavmil/grpc_hello_world#readme"
+}
