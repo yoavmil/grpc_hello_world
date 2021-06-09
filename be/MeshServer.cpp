@@ -13,36 +13,56 @@
 #include "MeshServer.h"
 
 using grpc::ServerBuilder;
-using grpc::Status;
 using grpc::ServerContext;
 using grpc::ServerReader;
+using grpc::Status;
 
-// TODO replace with amlib structures
-struct Facet
+class MeshSlicerService final : public MeshUtils::MeshSlicer::Service
 {
-    glm::vec3 a, b, c;
-};
-
-struct Mesh
-{
-    std::vector<Facet> facets;
-};
-
-class MeshSlicerService final : public MeshUtils::MeshSlicer::Service 
-{
-    virtual Status UploadMesh(ServerContext* context, const MeshUtils::Mesh* request, MeshUtils::MeshID* response) override     {
-        MeshUtils::Facet protoFacet;
-        for (auto& protoFacet : request->facets()) {
-            fmt::print("{},{},{}\n", protoFacet.v0().x(), protoFacet.v0().y(), protoFacet.v0().z());
-        }
+    virtual Status UploadMesh(ServerContext *context, const MeshUtils::Mesh *request, MeshUtils::MeshID *response) override
+    {
         auto uuid = uuidBank.generate();
+        addMesh(request, uuid);
         response->set_uuid(uuid);
         return Status::OK;
     }
+    virtual Status ReleaseMesh(ServerContext *context, const MeshUtils::MeshID *request, MeshUtils::OkReply *response) override
+    {
+        uuidBank.release(request->uuid());
+        response->set_ok(true);
+        return Status::OK;
+    }
+    virtual Status GetContour(ServerContext *context, const MeshUtils::ContourRequest *request, MeshUtils::Polygons *response) override
+    {
+        return Status(grpc::UNIMPLEMENTED, "not ready yet");
+    }
+
 private:
     using UUID = uint32_t;
     UuidBank<UUID> uuidBank;
-    std::unordered_map<UUID, std::shared_ptr<Mesh>> meshs;
+
+    struct MeshHandle
+    {
+        UUID uuid;
+        // TODO replace with amlib structure
+        MeshUtils::Mesh mesh;
+        std::chrono::time_point<std::chrono::steady_clock> lastInteraction;
+    };
+
+    std::unordered_map<UUID, std::shared_ptr<MeshHandle>>
+        meshs;
+    std::mutex mutex;
+    void addMesh(const MeshUtils::Mesh *mesh, UUID uuid)
+    {
+        auto handle = std::make_shared<MeshHandle>();
+        {
+            std::lock_guard guard(mutex);
+            meshs[uuid] = handle;
+        }
+        handle->mesh = *mesh;
+        handle->uuid = uuid;
+        handle->lastInteraction = std::chrono::steady_clock::now();
+    }
 };
 
 void startMeshServer()

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { STLLoaderService } from '../../services/stlloader.service';
 import * as THREE from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewerMeshService } from './viewer.mesh.service';
+import { MeshService } from 'src/app/services/mesh.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,39 +20,34 @@ export class STLReaderService {
   }
 
   constructor(
-    private stlLoader: STLLoaderService,
-    private viewerMeshService: ViewerMeshService
+    private viewerMeshService: ViewerMeshService,
+    private meshService: MeshService
   ) {
-    this.stlLoader
-      .getCurrentFileUrlListener()
-      .subscribe((url) => this.readSTL(url));
+    this.meshService
+      .getGeometrySubjectListener()
+      .subscribe((geo) => this.readGeometry(geo));
   }
-
-  private readSTL(url: string) {
+  readGeometry(geometry: THREE.BufferGeometry): void {
     if (this.mesh) {
       this.scene.remove(this.mesh);
       this.mesh = null;
     }
+    geometry.computeVertexNormals();
+    geometry.computeBoundingBox();
 
-    const loader = new STLLoader();
-    loader.load(url, (geometry: THREE.BufferGeometry) => {
-      geometry.computeVertexNormals();
-      geometry.computeBoundingBox();
-
-      var material = new THREE.MeshStandardMaterial({
-        color: 0x1234560,
-        roughness: 0.5,
-        metalness: 0.2,
-        flatShading: true,
-        emissive: 0,
-        side: THREE.DoubleSide,
-      });
-      this.mesh = new THREE.Mesh(geometry, material);
-
-      this.mesh.castShadow = true;
-      this.mesh.receiveShadow = true;
-
-      this.scene.add(this.mesh);
+    var material = new THREE.MeshStandardMaterial({
+      color: 0x1234560,
+      roughness: 0.5,
+      metalness: 0.2,
+      flatShading: true,
+      emissive: 0,
+      side: THREE.DoubleSide,
     });
+    this.mesh = new THREE.Mesh(geometry, material);
+
+    this.mesh.castShadow = true;
+    this.mesh.receiveShadow = true;
+
+    this.scene.add(this.mesh);
   }
 }
