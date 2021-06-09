@@ -21,10 +21,11 @@ I will learn
   * ~~add `ThreeJs`~~
   * ~~open mesh from disk~~
   * ~~track 3D position of the mouse~~
-* uuid - test it
-* make it a cmake library
-  * add gtest
-  * test uuid functonality
+* ~~uuid - test it~~
+* ~~make it a cmake library~~
+  * ~~add gtest~~
+  * ~~test uuid functonality~~
+* ~~deploy `envoy` using a docker to overcome CORS~~
 * gRPC STL calls
 * Add gRPC call for opening an STL blob, returning an unique ID
   * Add gRPC call for releasing that loaded mesh by unique ID.
@@ -43,6 +44,12 @@ I will learn
   * display polygons at FE
 
 ### commands
-`cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=C:/Users/User/source/repos/vcpkg/scripts/buildsystems/vcpkg.cmake`
-`cmake --build build`
-`.\build\src\Debug\main.exe`
+`npm run cmake`
+`npm run build`
+`npm run serve`
+`npm run serve:proxy`
+
+# What gives?
+The Angular client listens to port 5000.
+The C++ gRPC server listens at port 9090.
+We need to use a proxy because two reasons: 1) Because web browsers cannot talk to another port, what is called CORS. 2) gRPC works with HTTP/2 protocol, not supported by browsers. So we need to an Envoy proxy built just for this. It is run in a Docker.

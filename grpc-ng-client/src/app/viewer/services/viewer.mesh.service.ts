@@ -4,7 +4,7 @@ import * as THREE from 'three';
 @Injectable({
   providedIn: 'root',
 })
-export class MeshService {
+export class ViewerMeshService {
   constructor() {}
   public mesh: THREE.Mesh;
 }

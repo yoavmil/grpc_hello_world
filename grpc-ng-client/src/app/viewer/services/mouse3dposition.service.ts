@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import * as THREE from 'three';
-import { MeshService } from './mesh.service';
+import { ViewerMeshService } from './viewer.mesh.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,7 @@ export class Mouse3DPositionService {
       vector.sub(this.camera.position).normalize()
     );
 
-    let intersects = ray.intersectObject(this.meshService.mesh);
+    let intersects = ray.intersectObject(this.viewerMeshService.mesh);
 
     if (intersects.length > 0) {
       if (!intersects[0].point.equals(this.prevPosition)) {
@@ -48,7 +48,7 @@ export class Mouse3DPositionService {
     }
   }
 
-  constructor(private meshService: MeshService) {}
+  constructor(private viewerMeshService: ViewerMeshService) {}
   private meshMousePos = new Subject<THREE.Vector3>();
   private mouse: THREE.Vector2 = new THREE.Vector2();
   private camera: THREE.Camera;

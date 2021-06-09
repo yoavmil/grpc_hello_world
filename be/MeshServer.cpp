@@ -9,7 +9,7 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
-#include "generated/helloworld.grpc.pb.h"
+#include "generated/meshutils.grpc.pb.h"
 #include "MeshServer.h"
 
 using grpc::ServerBuilder;
@@ -28,10 +28,10 @@ struct Mesh
     std::vector<Facet> facets;
 };
 
-class MeshSlicerService final : public helloworld::MeshSlicer::Service 
+class MeshSlicerService final : public MeshUtils::MeshSlicer::Service 
 {
-    virtual Status UploadMesh(ServerContext* context, const helloworld::Mesh* request, helloworld::MeshID* response) override     {
-        helloworld::Facet protoFacet;
+    virtual Status UploadMesh(ServerContext* context, const MeshUtils::Mesh* request, MeshUtils::MeshID* response) override     {
+        MeshUtils::Facet protoFacet;
         for (auto& protoFacet : request->facets()) {
             fmt::print("{},{},{}\n", protoFacet.v0().x(), protoFacet.v0().y(), protoFacet.v0().z());
         }

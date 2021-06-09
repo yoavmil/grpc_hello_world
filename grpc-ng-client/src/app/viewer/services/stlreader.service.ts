@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { STLLoaderService } from '../../services/stlloader.service';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { MeshService } from './mesh.service';
+import { ViewerMeshService } from './viewer.mesh.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class STLReaderService {
   private get mesh(): THREE.Mesh {
-    return this.meshService.mesh;
+    return this.viewerMeshService.mesh;
   }
   private set mesh(m: THREE.Mesh) {
-    this.meshService.mesh = m;
+    this.viewerMeshService.mesh = m;
   }
   private scene: THREE.Scene;
 
@@ -22,7 +22,7 @@ export class STLReaderService {
 
   constructor(
     private stlLoader: STLLoaderService,
-    private meshService: MeshService
+    private viewerMeshService: ViewerMeshService
   ) {
     this.stlLoader
       .getCurrentFileUrlListener()

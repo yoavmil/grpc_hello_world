@@ -1,11 +1,5 @@
 syntax = "proto3";
-package helloworld;
-
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
-}
+package MeshUtils;
 
 service MeshSlicer {
   rpc UploadMesh(Mesh) returns (MeshID) {}
@@ -53,14 +47,4 @@ message MeshID {
 
 message OkReply {
   bool ok = 1;
-}
-
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
 }

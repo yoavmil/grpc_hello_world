@@ -11,7 +11,7 @@ let pluginCmd =
   "--plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd";
 let tsOutFolder = "./src/app/generated";
 let protosFolder = path.resolve("../protos");
-let protoName = "helloworld.proto";
+let protoName = "MeshUtils.proto";
 let protoFullPath = path.join(protosFolder, protoName);
 
 // TODO replace execFile with var spawn = require("child_process").spawn;

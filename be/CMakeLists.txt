@@ -4,15 +4,15 @@ add_subdirectory(uuid)
 get_target_property(gRPC_CPP_PLUGIN_EXECUTABLE gRPC::grpc_cpp_plugin IMPORTED_LOCATION_RELEASE)
 set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
 set(PROTOS_DIR "${CMAKE_SOURCE_DIR}/protos")
-set(PROTO_FILES "${PROTOS_DIR}/helloworld.proto")
+set(PROTO_FILES "${PROTOS_DIR}/meshutils.proto")
 set(grpc_srcs 
- "${GENERATED_DIR}/helloworld.grpc.pb.cc"
- "${GENERATED_DIR}/helloworld.pb.cc"
+ "${GENERATED_DIR}/meshutils.grpc.pb.cc"
+ "${GENERATED_DIR}/meshutils.pb.cc"
 )
 set(grpc_hdrs
- "${GENERATED_DIR}/helloworld_mock.grpc.pb.h"
- "${GENERATED_DIR}/helloworld.grpc.pb.h"
- "${GENERATED_DIR}/helloworld.pb.h"
+ "${GENERATED_DIR}/meshutils_mock.grpc.pb.h"
+ "${GENERATED_DIR}/meshutils.grpc.pb.h"
+ "${GENERATED_DIR}/meshutils.pb.h"
 )
 set(grpc_files "${grpc_srcs}" "${grpc_hdrs}")
 
