@@ -1,4 +1,3 @@
-const { exec } = require("child_process");
 var path = require("path");
 var myArgs = process.argv.slice(2);
 myArgs[0] = path.resolve(myArgs[0]);

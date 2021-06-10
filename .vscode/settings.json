@@ -96,5 +96,6 @@
     },
     "cSpell.words": [
         "Protobuf"
-    ]
+    ],
+    "angular.enable-strict-mode-prompt": false
 }
