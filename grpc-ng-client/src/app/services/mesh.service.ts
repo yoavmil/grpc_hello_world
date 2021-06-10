@@ -1,9 +1,8 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { Facet, Mesh, Vec3 } from '../generated/MeshUtils_pb';
+import { Facet, Mesh, OkReply, Vec3 } from '../generated/MeshUtils_pb';
 import { HostBridgeService } from './host-bridge.service';
 import { STLLoaderService } from './stlloader.service';
 
@@ -25,12 +24,12 @@ export class MeshService {
     this.stlLoader
       .getCurrentFileUrlListener()
       .subscribe((url: string) => this.readStl(url));
+
+    this.keepAlive();
+    window.addEventListener('beforeunload', () => this.releaseMesh());
   }
   private readStl(url: string) {
-    if (this.meshUuid != -1) {
-      this.hostBridge.releaseUuid(this.meshUuid);
-      this.meshUuid = -1;
-    }
+    this.releaseMesh();
 
     const loader = new STLLoader();
     loader.load(url, (geometry: THREE.BufferGeometry) => {
@@ -62,5 +61,24 @@ export class MeshService {
         .uploadMesh(mesh)
         .then((meshID) => (this.meshUuid = meshID.getUuid()));
     });
+  }
+
+  private keepAlive() {
+    setTimeout(() => {
+      if (this.meshUuid != -1)
+        this.hostBridge.keepAlive(this.meshUuid).then((ok: OkReply) => {
+          if (!ok.getOk()) {
+            this.meshUuid = -1;
+          }
+        });
+      this.keepAlive();
+    }, 1000);
+  }
+
+  private releaseMesh() {
+    if (this.meshUuid != -1) {
+      this.hostBridge.releaseUuid(this.meshUuid);
+      this.meshUuid = -1;
+    }
   }
 }

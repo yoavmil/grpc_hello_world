@@ -1,4 +1,5 @@
 add_subdirectory(uuid)
+add_subdirectory(3rd)
 
 # commands for generating the protobuf c++ files
 get_target_property(gRPC_CPP_PLUGIN_EXECUTABLE gRPC::grpc_cpp_plugin IMPORTED_LOCATION_RELEASE)
@@ -41,3 +42,4 @@ add_executable(main ${server_srcs} ${server_hdrs} ${grpc_files})
 target_link_libraries(main PRIVATE fmt::fmt gRPC::grpc++ gRPC::grpc++_reflection)
 target_link_libraries(main PRIVATE uuid)
 target_link_libraries(main PRIVATE glm::glm)
+target_link_libraries(main PRIVATE amlib)

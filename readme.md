@@ -28,16 +28,15 @@ I will learn
 * ~~deploy `envoy` using a docker to overcome CORS~~
 * gRPC STL calls
 * Add gRPC call for opening an STL blob, returning an unique ID
-  * Add gRPC call for releasing that loaded mesh by unique ID.
+  * ~~Add gRPC call for releasing that loaded mesh by unique ID.~~
   * Add server timeout for releasing anyways
   * Add client-server keep-alive mechanism - on that unique ID
-  * upon reading new STL, release old STL (FE)
+  * ~~upon reading new STL, release old STL (FE)~~
 * `amlib`
-
-  * merge and update `amlib`
+* merge and update `amlib`
   * support keeping raw data
-
-  * support one height slice
+  
+* support one height slice
 * gRPC slice call
 
   * add gRPC call for slicing at height, returning polygons

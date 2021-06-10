@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MeshSlicerClient } from '../generated/MeshUtilsServiceClientPb';
-import { Mesh, MeshID } from '../generated/MeshUtils_pb';
+import { Mesh, MeshID, OkReply } from '../generated/MeshUtils_pb';
 @Injectable({
   providedIn: 'root',
 })
@@ -22,6 +22,12 @@ export class HostBridgeService {
 
   public uploadMesh(mesh: Mesh): Promise<MeshID> {
     return this.gRpcClient.uploadMesh(mesh, {});
+  }
+
+  keepAlive(meshUuid: number): Promise<OkReply> {
+    let meshId = new MeshID();
+    meshId.setUuid(meshUuid);
+    return this.gRpcClient.keepAlive(meshId, {});
   }
 
   private gRpcClient: MeshSlicerClient;

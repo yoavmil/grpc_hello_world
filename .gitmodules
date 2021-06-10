@@ -1,0 +1,3 @@
+[submodule "be/3rd/amlib"]
+	path = be/3rd/amlib
+	url = https://github.com/yoavmil/amlib

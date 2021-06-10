@@ -5,6 +5,7 @@ service MeshSlicer {
   rpc UploadMesh(Mesh) returns (MeshID) {}
   rpc ReleaseMesh(MeshID) returns(OkReply) {}
   rpc GetContour(ContourRequest) returns (Polygons) {}
+  rpc KeepAlive(MeshID) returns (OkReply) {}
 }
 
 message Vec2 {

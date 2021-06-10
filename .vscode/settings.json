@@ -92,7 +92,9 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "cinttypes": "cpp",
-        "strstream": "cpp"
+        "strstream": "cpp",
+        "filesystem": "cpp",
+        "regex": "cpp"
     },
     "cSpell.words": [
         "Protobuf"
