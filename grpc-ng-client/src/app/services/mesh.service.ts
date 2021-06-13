@@ -2,9 +2,16 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { Facet, Mesh, OkReply, Vec3 } from '../generated/MeshUtils_pb';
+import {
+  Facet,
+  Mesh,
+  OkReply,
+  Polygons,
+  Vec3,
+} from '../generated/MeshUtils_pb';
 import { HostBridgeService } from './host-bridge.service';
 import { STLLoaderService } from './stlloader.service';
+import * as THREE from 'three';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +22,11 @@ export class MeshService {
   private geometrySubject = new Subject<THREE.BufferGeometry>();
   public getGeometrySubjectListener(): Observable<THREE.BufferGeometry> {
     return this.geometrySubject.asObservable();
+  }
+
+  private contourSubject = new Subject<THREE.Vec2[][]>();
+  public onContourChanged(): Observable<THREE.Vec2[][]> {
+    return this.contourSubject.asObservable();
   }
 
   constructor(
@@ -80,5 +92,21 @@ export class MeshService {
       this.hostBridge.releaseUuid(this.meshUuid);
       this.meshUuid = -1;
     }
+  }
+
+  public mousePosChanged(xyz: THREE.Vector3) {
+    this.hostBridge
+      .requestContour(this.meshUuid, xyz.z)
+      .then((polys: Polygons) => {
+        let pointsArray: THREE.Vec2[][] = [];
+        polys.getPolygonsList().forEach((poly) => {
+          let points = Array.from(
+            poly.getPointsList(),
+            (p) => new THREE.Vector2(p.getX(), p.getY())
+          );
+          pointsArray.push(points);
+          this.contourSubject.next(pointsArray);
+        });
+      });
   }
 }

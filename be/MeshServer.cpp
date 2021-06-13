@@ -49,7 +49,35 @@ private:
 
     virtual Status GetContour(ServerContext *context, const MeshUtils::ContourRequest *request, MeshUtils::Polygons *response) override
     {
-        return Status(grpc::UNIMPLEMENTED, "not ready yet");
+        std::shared_ptr<MeshHandle> handle = nullptr;
+        {
+            std::lock_guard guard(mutex);
+            if (meshs.find(request->uuid()) != meshs.end())
+                handle = meshs[request->uuid()];
+        }
+        if (handle == nullptr)
+            return Status(grpc::NOT_FOUND, "mesh ID not found");
+
+        amlib::Polygons ret;
+        amlib::MeshUtils::RESULT result;
+        { // the mutex is because of small manipuations in the z values in the mesh
+            std::lock_guard guard(handle->mutex);
+            result = amlib::MeshUtils::Slice(handle->mesh, amlib::ToMicron(request->z()), ret);
+        }
+
+        auto *gRpcPolys = response->mutable_polygons();
+        for (const auto &poly : ret)
+        {
+            MeshUtils::Polygon *gRpcPoly = gRpcPolys->Add();
+            for (const auto &point : poly)
+            {
+                auto *gPoint = gRpcPoly->add_points();
+                gPoint->set_x(amlib::ToMm(point.X));
+                gPoint->set_y(amlib::ToMm(point.Y));
+            }
+        }
+
+        return Status::OK;
     }
 
     virtual Status KeepAlive(grpc::ServerContext *context, const MeshUtils::MeshID *request, MeshUtils::OkReply *response) override
@@ -75,6 +103,7 @@ private:
         UUID uuid;
         amlib::MeshUtils::Mesh mesh;
         std::chrono::time_point<std::chrono::steady_clock> lastInteraction;
+        std::mutex mutex;
     };
 
     std::unordered_map<UUID, std::shared_ptr<MeshHandle>> meshs;
@@ -95,6 +124,12 @@ private:
             amFacet.v[2] = {facet.v2().x(), facet.v2().y(), facet.v2().z()};
             handle->mesh.facets.push_back(amFacet);
         }
+
+        // compute bounding box
+        for (auto &f : handle->mesh.facets)
+            for (auto &v : f.v)
+                handle->mesh.aabb3.combine(v);
+
         handle->uuid = uuid;
         handle->lastInteraction = now();
     }
@@ -119,11 +154,11 @@ private:
         {
             std::lock_guard guard(mutex);
             meshs.erase(uuid);
-            uuidBank.release(uuid);        
+            uuidBank.release(uuid);
         }
         startWatchdog();
     }
-    int watchDogSeconds = 10;
+    int watchDogSeconds = 1000;
     std::future<void> watchdogThread;
     std::chrono::time_point<std::chrono::steady_clock> now() { return std::chrono::steady_clock::now(); }
 };

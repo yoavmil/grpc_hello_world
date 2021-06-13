@@ -97,7 +97,8 @@
         "regex": "cpp"
     },
     "cSpell.words": [
-        "Protobuf"
+        "Protobuf",
+        "amlib"
     ],
     "angular.enable-strict-mode-prompt": false
 }

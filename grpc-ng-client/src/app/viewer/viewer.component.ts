@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { STLStubLoaderService } from '../services/stlstub-loader.service';
+import { ContourRetrieverService } from './services/contour-retriever.service';
 import { Mouse3DPositionService } from './services/mouse3dposition.service';
 import { STLReaderService } from './services/stlreader.service';
 
@@ -30,7 +31,8 @@ export class ViewerComponent implements AfterViewInit {
   constructor(
     private stlReader: STLReaderService,
     private stlStubLoader: STLStubLoaderService,
-    private mouse3dPos : Mouse3DPositionService
+    private mouse3dPos: Mouse3DPositionService,
+    private contourRetriever: ContourRetrieverService
   ) {}
 
   ngAfterViewInit(): void {
@@ -40,6 +42,8 @@ export class ViewerComponent implements AfterViewInit {
     this.stlReader.init(this.scene);
     this.stlStubLoader.loadStubSTL();
     this.mouse3dPos.init(this.camera);
+    this.contourRetriever.init(this.scene);
+
     this.render();
   }
 
@@ -52,7 +56,7 @@ export class ViewerComponent implements AfterViewInit {
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.viewerWrapperRef.nativeElement.appendChild(this.renderer.domElement);
     this.renderer.setClearColor(0x543210);
-    this.canvas.onmousemove = event => this.onMouseMove(event);
+    this.canvas.onmousemove = (event) => this.onMouseMove(event);
   }
 
   createCamera() {
